@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barbie Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #ffccff;
+            color: #d63384;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        button {
+            background-color: #ff69b4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin: 5px;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #ff1493;
+        }
+    </style>
+</head>
+<body>
+    <audio id="bg-music" loop>
+        <source src="Dua Lipa - Dance The Night (From Barbie The Album) [Official Lyric Video].mp3" type="audio/mp3">
+    </audio>
+    <button onclick="toggleMusic()">Play/Pause Music</button>
+    <div class="container">
+        <h1>Barbie Quiz</h1>
+        <p id="question"></p>
+        <div id="answers"></div>
+        <button id="next-btn" onclick="nextQuestion()" style="display:none;">Next</button>
+        <p id="score" style="display:none;"></p>
+    </div>
+    <script>
+        let quizData = [
+            { question: "What year was Barbie first released?", answers: ["1955", "1959", "1962", "1971"], correct: "1959" },
+            { question: "What is Barbie's full name?", answers: ["Barbara Mattel", "Barbie Roberts", "Barbara Millicent Roberts", "Barbie Ann"], correct: "Barbara Millicent Roberts" },
+            { question: "Who created Barbie?", answers: ["Ruth Handler", "Elliot Handler", "Margaret Adams", "James Mattel"], correct: "Ruth Handler" },
+            { question: "What was the first Barbie doll's profession?", answers: ["Doctor", "Astronaut", "Fashion Model", "Teacher"], correct: "Fashion Model" },
+            { question: "What is the name of Barbie’s longtime boyfriend?", answers: ["John", "Kevin", "Ken", "Mike"], correct: "Ken" },
+            // Add 35 more questions here...
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        function loadQuestion() {
+            let questionEl = document.getElementById("question");
+            let answersEl = document.getElementById("answers");
+            let nextBtn = document.getElementById("next-btn");
+            
+            questionEl.innerText = quizData[currentQuestionIndex].question;
+            answersEl.innerHTML = "";
+            
+            quizData[currentQuestionIndex].answers.forEach(answer => {
+                let btn = document.createElement("button");
+                btn.innerText = answer;
+                btn.onclick = () => checkAnswer(answer, btn);
+                answersEl.appendChild(btn);
+            });
+            nextBtn.style.display = "none";
+        }
+
+        function checkAnswer(answer, btn) {
+            let correctAnswer = quizData[currentQuestionIndex].correct;
+            if (answer === correctAnswer) {
+                score++;
+                btn.style.backgroundColor = "#4CAF50";
+            } else {
+                btn.style.backgroundColor = "#FF0000";
+            }
+            document.getElementById("next-btn").style.display = "block";
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizData.length) {
+                loadQuestion();
+            } else {
+                document.querySelector(".container").innerHTML = `<h1>Quiz Completed!</h1><p>Your score: ${score} / ${quizData.length}</p>`;
+            }
+        }
+
+        function toggleMusic() {
+            let music = document.getElementById("bg-music");
+            if (music.paused) {
+                music.play();
+            } else {
+                music.pause();
+            }
+        }
+
+        loadQuestion();
+    </script>
+</body>
+</html>
